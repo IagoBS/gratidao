@@ -1,0 +1,59 @@
+{
+  "workbench.colorTheme": "Dracula",
+
+  "editor.fontSize": 18,
+  "editor.lineHeight": 24,
+  "editor.fontFamily": "Fira Code",
+  "editor.fontLigatures": true,
+
+  "editor.rulers": [80, 120],
+  "eslint.autoFixOnSave": true,
+  "editor.formatOnSave": false,
+  "eslint.validate": [
+    {
+      "language": "javascript",
+      "autoFix": true
+    },
+    {
+      "language": "javascriptreact",
+      "autoFix": true
+    },
+    {
+      "language": "typescript",
+      "autoFix": true,
+    },
+    {
+      "language": "typescriptreact",
+      "autoFix": true,
+    }
+  ],
+"editor.renderLineHighlight": "gutter",
+"editor.tabSize": 2,
+"terminal.integrated.fontSize": 14,
+"emmet.includeLanguages": {
+  "javascript": "javascriptreact",
+
+},
+"emmet.syntaxProfiles": {
+  "javascript": "jsx"
+},
+"javascript.updateImportsOnFileMove.enabled": "never",
+"editor.parameterHints.enabled": false,
+"breadcrumbs.enabled": true,
+"javascript.suggest.autoImports": false,
+
+
+
+
+
+  "workbench.colorCustomizations": {
+    "activityBar.background": "#113421",
+    "titleBar.activeBackground": "#17492E",
+    "titleBar.activeForeground": "#F4FBF7"
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "sequencediagrams.diagram.style": "hand",
+  "sequencediagrams.preview.trigger": "onSave"
+}
