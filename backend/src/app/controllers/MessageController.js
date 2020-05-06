@@ -2,6 +2,7 @@ import * as Yup from 'yup';
 import Message from '../models/Message';
 import User from '../models/User';
 import File from '../models/File';
+import Notification from '../schemas/Notification';
 
 class MessageController {
   async index(request, response) {
@@ -57,14 +58,15 @@ class MessageController {
       where: { id: provider_id, provider: true },
     });
 
+    /**
+     * Notification provider
+     */
     if (checkProvider) {
-      // manda para fila de notificações
-      // const hourStart = startOfHour(parseISO(date));
-      // if (isBefore(hourStart, new Date())) {
-      //   return response
-      //     .status(400)
-      //     .json({ error: 'Operação negada - Past date a not permited' });
-      // }
+      await Notification.create({
+        message: messages,
+        user: provider_id,
+      });
+
     }
 
     const createMessage = await Message.create({
