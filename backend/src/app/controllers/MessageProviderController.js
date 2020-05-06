@@ -15,18 +15,18 @@ class MessageProviderController {
       });
     }
 
-    const { date } = request.query;
-    const parseDate = parseISO(date);
+    const { data } = request.query;
+    const parseDate = parseISO(data);
 
     const message = await Message.findAll({
       where: {
         provider_id: request.userId,
         deleted_at: null,
-        date: {
-          [Op.between]: [startOfDay(parseDate), endOfDay(parseDate)],
-        },
       },
-      order: date,
+      data: {
+        [Op.between]: [startOfDay(parseDate), endOfDay(parseDate)],
+      },
+      order: ['date'],
     });
 
     return response.json(message);

@@ -6,6 +6,7 @@ class Message extends Model {
       {
         messages: Sequelize.STRING,
         deleted_at: Sequelize.DATE,
+        date: Sequelize.DATE,
       },
       {
         sequelize,
