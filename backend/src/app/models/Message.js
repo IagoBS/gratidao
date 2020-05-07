@@ -17,7 +17,6 @@ class Message extends Model {
 
   static associate(models) {
     this.belongsTo(models.User, { foreignKey: 'user_id', as: 'usuario' });
-    this.belongsTo(models.User, { foreignKey: 'provider_id', as: 'provider' });
     this.belongsTo(models.Category, {
       foreignKey: 'category_id',
       as: 'category',

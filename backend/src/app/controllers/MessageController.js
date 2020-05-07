@@ -17,7 +17,7 @@ class MessageController {
       include: [
         {
           model: User,
-          as: 'provider',
+          as: 'usuario',
           attributes: ['id', 'name'],
           include: [
             { model: File, as: 'avatar', attributes: ['id', 'path', 'url'] },
@@ -29,54 +29,55 @@ class MessageController {
   }
 
   async store(request, response) {
-    const shema = Yup.object().shape({
-      messages: Yup.string().required(),
-      provider_id: Yup.number().required(),
-      category_id: Yup.number().required(),
-      date: Yup.date(),
-    });
+    try {
+      const shema = Yup.object().shape({
+        messages: Yup.string().required(),
+        category_id: Yup.number().required(),
+        date: Yup.date(),
+      });
 
-    if (!(await shema.isValid(request.body))) {
+      if (!(await shema.isValid(request.body))) {
+        return response.status(400).json({
+          error: 'Erro ao cadastrar mensagem tente novamente - Bad Request',
+        });
+      }
+
+      const { messages, category_id, date } = request.body;
+
+      const checkToUser = await User.findOne({
+        where: { id: request.userId },
+      });
+      if (!checkToUser) {
+        return response.status(403).json({
+          error:
+            'erro ao criar mensagem, tente novamente ou mais tarde - bad request: inauthorization',
+        });
+      }
+
+      const checktoUserProvider = await User.findOne({
+        where: { id: request.userId, provider: true },
+      });
+
+      if (checktoUserProvider) {
+        await Notification.create({
+          message: messages,
+          user: request.userId,
+        });
+      }
+
+      const createMessage = await Message.create({
+        user_id: request.userId,
+        messages,
+        category_id,
+        date,
+      });
+
+      return response.json(createMessage);
+    } catch (err) {
       return response.status(400).json({
-        error: 'Erro ao cadastrar mensagem tente novamente - Bad Request',
+        error: `Erro ao criar mensagem, tente novamente: ${err.message}`,
       });
     }
-
-    const { provider_id, messages, category_id, date } = request.body;
-
-    const checkToUser = await User.findOne({
-      where: { id: provider_id },
-    });
-    if (!checkToUser) {
-      return response.status(403).json({
-        error:
-          'erro ao criar mensagem, tente novamente ou mais tarde - bad request: inauthorization',
-      });
-    }
-
-    const checkProvider = await User.findOne({
-      where: { id: provider_id, provider: true },
-    });
-
-    /**
-     * Notification provider
-     */
-    if (checkProvider) {
-      await Notification.create({
-        message: messages,
-        user: provider_id,
-      });
-    }
-
-    const createMessage = await Message.create({
-      user_id: request.userId,
-      provider_id,
-      messages,
-      category_id,
-      date,
-    });
-
-    return response.json(createMessage);
   }
 
   async update(request, response) {
