@@ -7,7 +7,7 @@ import FileController from './app/controllers/FileController';
 import MessageController from './app/controllers/MessageController';
 import CategoryController from './app/controllers/CategoryController';
 import MessageProviderController from './app/controllers/MessageProviderController';
-
+import NotificationController from './app/controllers/NotificationController';
 import authMiddleware from './app/middlewares/auth';
 import multerConfiguration from './config/multer';
 
@@ -24,9 +24,16 @@ routes.post('/files', upload.single('file'), FileController.store);
 
 routes.post('/messages', MessageController.store);
 routes.get('/messages', MessageController.index);
+routes.put('/messages/:id', MessageController.update);
+routes.delete('/messages/:id', MessageController.delete);
 
 routes.post('/categories', CategoryController.store);
+routes.put('/categories/:id', CategoryController.update);
+routes.delete('/categories/:id', CategoryController.delete);
 
 routes.get('/message', MessageProviderController.index);
+
+routes.get('/notification', NotificationController.index);
+routes.put('/notification/:id', NotificationController.update);
 
 export default routes;

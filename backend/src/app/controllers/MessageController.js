@@ -66,7 +66,6 @@ class MessageController {
         message: messages,
         user: provider_id,
       });
-
     }
 
     const createMessage = await Message.create({
@@ -80,54 +79,52 @@ class MessageController {
     return response.json(createMessage);
   }
 
-  async show(request, response) {
-    const message = await Message.findAll({
-      where: { user_id: request.userId, deleted_at: null },
-      order: ['created_at'],
-      attributes: ['id', 'usuario'],
-      include: [
-        {
-          model: User,
-          as: 'provider',
-          attributes: ['id', 'name'],
-          include: [
-            {
-              model: File,
-              as: 'avatar',
-              attributes: ['id', 'path', 'url'],
-            },
-          ],
-        },
-      ],
-    });
-    return response.json(message);
+  async update(request, response) {
+    try {
+      const shema = Yup.object().shape({
+        messages: Yup.string().required(),
+        category_id: Yup.number().required(),
+      });
+
+      if (!(await shema.isValid(request.body))) {
+        return response.status(400).json({
+          error: 'Erro ao cadastrar mensagem tente novamente - Bad Request',
+        });
+      }
+      const message = await Message.findByPk(request.params.id);
+
+      const { id, messages, category_id } = await message.update(request.body);
+
+      return response.json({
+        id,
+        messages,
+        category_id,
+      });
+    } catch (err) {
+      return response.status(400).json({
+        error: `erro ao editar mensagem, tente novamente - ${err.message}`,
+      });
+    }
   }
 
-  async update(request, response) {
-    const shema = Yup.object().shape({
-      messages: Yup.string().required(),
-      provider_id: Yup.number().required(),
-    });
+  async delete(request, response) {
+    try {
+      const message = await Message.findByPk(request.params.id);
 
-    if (!(await shema.isValid(request.body))) {
+      if (message.user_id !== request.userId) {
+        return response.status(401).json({
+          error:
+            'Erro ao deletar mensagem, tente novamente - Delete message is unauthorized',
+        });
+      }
+
+      await message.destroy();
+      return response.json();
+    } catch (err) {
       return response.status(400).json({
-        error: 'Erro ao cadastrar mensagem tente novamente - Bad Request',
+        error: `Erro ao deletar usuário, tente novamente ${err.message}`,
       });
     }
-    const { id } = request.params;
-    const message = await Message.findByPk(id);
-
-    if (!message) {
-      return response.status(401).json({
-        error: 'Erro ao editar mensagem, tente novamente',
-      });
-    }
-    const { messages } = message.update(request.body);
-
-    return response.json({
-      id,
-      messages,
-    });
   }
 }
 export default new MessageController();
