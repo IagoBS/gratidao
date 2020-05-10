@@ -4,9 +4,10 @@ import User from '../app/models/User';
 import File from '../app/models/File';
 import Message from '../app/models/Message';
 import Category from '../app/models/Category';
+import ForgotPassword from '../app/models/ForgotPassword';
 import databaseConfig from '../config/database';
 
-const models = [User, File, Message, Category];
+const models = [User, File, Message, Category, ForgotPassword];
 
 class Database {
   constructor() {

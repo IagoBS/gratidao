@@ -7,6 +7,7 @@ import FileController from './app/controllers/FileController';
 import MessageController from './app/controllers/MessageController';
 import CategoryController from './app/controllers/CategoryController';
 import MessageProviderController from './app/controllers/MessageProviderController';
+import ForgotPasswordController from './app/controllers/ForgotPasswordController';
 import NotificationController from './app/controllers/NotificationController';
 import authMiddleware from './app/middlewares/auth';
 import multerConfiguration from './config/multer';
@@ -15,7 +16,11 @@ const routes = new Router();
 const upload = multer(multerConfiguration);
 
 routes.post('/users', UserController.store);
+
 routes.post('/session', SessionController.store);
+
+routes.post('/forgotpassword', ForgotPasswordController.store);
+routes.put('/forgotpassword/:token', ForgotPasswordController.update);
 
 routes.use(authMiddleware);
 routes.get('/users', UserController.index);

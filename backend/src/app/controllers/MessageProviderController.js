@@ -20,7 +20,7 @@ class MessageProviderController {
 
     const message = await Message.findAll({
       where: {
-        provider_id: request.userId,
+        user_id: request.userId,
         deleted_at: null,
       },
       data: {
