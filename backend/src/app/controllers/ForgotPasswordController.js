@@ -2,7 +2,8 @@ import * as Yup from 'yup';
 import crypto from 'crypto';
 import User from '../models/User';
 import ForgotPassword from '../models/ForgotPassword';
-import Mail from '../../lib/Mail';
+import Queue from '../../lib/Queue';
+import ForgotPasswordMail from '../jobs/ForgotPasswordMail';
 
 class ForgotPasswordController {
   async store(request, response) {
@@ -40,14 +41,10 @@ class ForgotPasswordController {
         token_created_at: nowDate,
       });
 
-      await Mail.sendMail({
-        to: `${CheckUserExist.name} <${email}>`,
-        subject: 'GRATIDÃO - SOLITAÇÃO PARA REDEFINIÇÃO DE SENHA',
-        template: 'forgotpassword',
-        context: {
-          name: CheckUserExist.name,
-          token,
-        },
+      await Queue.add(ForgotPasswordMail.key, {
+        CheckUserExist,
+        token,
+        email,
       });
 
       return response.json(forgotpassword);
