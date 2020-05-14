@@ -1,10 +1,10 @@
 export default {
-  host: 'smtp.mailtrap.io',
-  port: 2525,
-  secure: false,
+  host: process.env.MAIL_HOST,
+  port: process.env.MAIL_PORT,
+  secure: process.env.MAIL_SECURE,
   auth: {
-    user: "670a41dee63407",
-    pass: "2d29d88dc73ff5"
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASSWORD,
   },
   default: {
     from: 'GEEC - Citec <web@geec.org.br>',
